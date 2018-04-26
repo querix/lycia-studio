@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html class="qx-top-of-hierarchy qx-target-cef ">
+
+<head>
+  <title>LyciaDesktop</title>
+  <meta charset="utf-8" />
+  <script>
+    QXLWCHROMEEXTENSIONID = "moejakilklfldeenjlfbjpmadadgeopk"
+  </script>
+  <link id="qx-title-icon" href="pack/LyciaDC_32.png" type="image/x-icon" rel="shortcut icon">
+  <link rel="stylesheet" href="css/libs.min.css?_=development" />
+  <link rel="stylesheet" href="css/lyciaweb.min.css?_=development" />
+  <script type="text/javascript" src="js/libs.min.js?_=development"></script>
+  <script type="text/javascript" src="js/lyciaweb.min.js?_=development"></script>
+  <script>
+    querix.go();
+  </script>
+</head>
+
+<body id="qx-home-body">
+  <form id="qx-home-form" autocomplete="on">
+    <div>
+      <div>
+        <div>
+          <div id="main">
+            <div id="logo"><img alt="" src="pack/logo200x200.png" /></div>
+            <div id="controls">
+              <div id="qx-home-main-tab"><a data-checked="true" data-content="qx-home-conn" href="#">Connection</a>
+                <a
+                  href="#" data-content="qx-home-auth">Authentication</a>
+              </div>
+              <div id="tab-pane">
+                <div id="qx-home-conn" class="tab-content tab-active">
+                  <div class="twrap"><input id="qx-home-server" name="server" class="qx-not-empty ui-autocomplete-input"
+                      type="text" placeholder="Server" autocomplete="on" /></div>
+                  <div class="twrap"><input id="qx-home-instance" name="instance" class="qx-not-empty ui-autocomplete-input"
+                      type="text" placeholder="Instance" autocomplete="off" /></div>
+                  <div class="twrap"><input id="qx-home-command" name="command" class="qx-not-empty ui-autocomplete-input"
+                      type="text" placeholder="Command" autocomplete="on" /></div>
+                </div>
+                <div id="qx-home-auth" class="tab-content">
+                  <div class="twrap qx-home-secure-wrapper"><input class="qx-home-secure ui-autocomplete-input" id="qx-home-user" type="text"
+                      placeholder="Username" /></div>
+                  <div class="twrap qx-home-secure-wrapper"><input class="qx-home-secure ui-autocomplete-input" id="qx-home-password"
+                      type="password" placeholder="Password" /></div>
+                  <div id="qx-home-login-error">
+                  <span>Invalid login/password</span> </div>
+                </div>
+              </div>
+              <div id="buttons"> <button id="qx-home-run" type="submit">Run</button> <button class="qx-home-exit"
+                  type="button">Exit</button> </div>
+            </div>
+          </div>
+          <div id="qx-home-info">
+            <table width="100%">
+              <tr>
+                <td> <span>Build: e6a191d</span> </td>
+                <td> <span>Date: 2018-04-23</span> </td>
+              </tr>
+            </table>
+          </div>
+          <div class="platform-dependent-wrapper">
+            <div id="qx-home-history"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+  <div id="qx-home-loading"></div>
+  <div id="qx-home-error" class="qx-home-error">
+    <div id="qx-home-error-msg"><span></span></div><button id="qx-home-retry">Retry</button> <button class="qx-home-exit"
+      type="button">Exit</button></div>
+  <div id="qx-main-layout">
+    <div id="qx-container-toolbars">
+      <div id="qx-container-toolbars-inner"></div>
+    </div>
+    <div id="qx-container">
+      <form id="qx-container-inner">
+        <div id="qx-container-menu">
+          <div class="qx-menu-inner"></div>
+        </div>
+        <div id="qx-container-rest">
+          <div id="qx-container-body" class="qx-viewport"></div>
+        </div>
+      </form>
+    </div>
+    <div id="qx-container-status-bar">
+      <div id="qx-container-status-bar-inner"></div>
+    </div>
+  </div>
+  <div id="qx-container-shadow">
+    <div id="qx-scroll-shadow"></div>
+    <div id="qx-window-shadow" class="ui-dialog ui-widget ui-widget-content"> </div>
+  </div>
+  <iframe id="qx-download-iframe" tabindex="-1" />
+</body>
+
+</html>

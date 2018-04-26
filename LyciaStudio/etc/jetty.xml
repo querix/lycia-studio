@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<!DOCTYPE Configure PUBLIC "-//Jetty//Configure//EN" "http://www.eclipse.org/jetty/configure_9_3.dtd">
+
+<Configure id="JettyServer" class="org.eclipse.jetty.server.Server">
+  <Set name="connectors">
+    <Array type="org.eclipse.jetty.server.Connector">
+      <Item>
+        <New class="org.eclipse.jetty.server.ServerConnector">
+          <Arg><Ref refid="JettyServer"/></Arg>
+          <Set name="port">8787</Set>
+        </New>
+      </Item>
+    </Array>
+  </Set>
+
+  <New id="context1" class="org.eclipse.jetty.server.handler.ContextHandler">
+    <Set name="contextPath">/public</Set>
+    <Set name="handler">
+        <New class="org.eclipse.jetty.server.handler.ResourceHandler">
+            <Set name="resourceBase">C:\ProgramData\Querix\Lycia\progs\public</Set>
+            <Set name="directoriesListed">true</Set>
+        </New> 
+    </Set>
+  </New>
+<!--
+  <New id="context2" class="org.eclipse.jetty.server.handler.ContextHandler">
+    <Set name="contextPath">/photo</Set>
+    <Set name="handler">                                               
+        <New class="org.eclipse.jetty.server.handler.ResourceHandler">
+			<Set name="resourceBase">http://500px.com</Set>
+            <Set name="directoriesListed">true</Set>
+        </New>
+    </Set>
+  </New>
+-->
+  <Set name="handler">
+    <New  id ="contextHandlerConnection"  class="org.eclipse.jetty.server.handler.HandlerCollection">
+      <Set name="handlers">
+        <Array type="org.eclipse.jetty.server.Handler">
+          <Item>
+            <Ref refid="context1" />
+          </Item>
+<!--
+          <Item>
+            <Ref refid="context2" />
+          </Item>
+-->
+        </Array>
+      </Set>
+    </New>
+  </Set>
+</Configure>

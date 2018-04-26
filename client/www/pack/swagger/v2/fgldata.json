@@ -1,0 +1,56 @@
+{
+  "title": "4GL value encoding into JSON",
+  "$schema": "http://json-schema.org/schema#",
+  "id": "http://www.querix.com/lycia-web/v2/fgldata.json",
+  "type": "array",
+  "item": "#/definitions/Value",
+  "definitions": {
+    "Value": {
+      "description": "JSON encoding for 4GL values",
+      "oneOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "string"
+        },
+        {
+          "type": "object",
+          "properties": [
+            {
+              "name": "$type",
+              "type": "string",
+              "enum": [
+                "byte",
+                "text"
+              ]
+            },
+            {
+              "name": "editor",
+              "type": "string"
+            },
+            {
+              "name": "filename",
+              "type": "string"
+            },
+            {
+              "name": "editor",
+              "type": "string"
+            },
+            {
+              "name": "value",
+              "type": "string"
+            }
+          ]
+        },
+        {
+          "type": "object"
+        },
+        {
+          "type": "array",
+          "item": "#/definitions/Value"
+        }
+      ]
+    }
+  }
+}

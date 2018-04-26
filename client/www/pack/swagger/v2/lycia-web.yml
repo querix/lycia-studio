@@ -1,0 +1,766 @@
+swagger: '2.0'
+api_key:
+  type: apiKey
+  name: x-auth-token
+  in: header
+info:
+  version: 2.0.0
+  title: LyciaWeb API 
+  description: |
+    Web API to 4GL application
+basePath: /LyciaWeb/esapi
+schemes:
+  - http
+  - https
+consumes:
+  - application/json
+produces:
+  - application/json
+  - text/plain
+paths:
+  /status:
+    get:
+      summary: Returns the current application status.
+      parameters:
+        - $ref: '#/parameters/x-auth-token'
+      responses:
+        200:
+          $ref: '#/responses/Status'
+  /run/{instance}/{command}:
+    post:
+      summary: Runs the specified command line.
+      parameters:
+        - in: path
+          name: instance
+          type: string
+          description: Name of an instance on Lycia Application Server.
+          required: true
+        - in: path
+          name: command
+          type: string
+          description: Command line string.
+          required: true
+        - $ref: '#/parameters/verbose'
+        - $ref: '#/parameters/args'
+        - $ref: '#/parameters/slot'
+        - $ref: '#/parameters/timeout'
+        - $ref: '#/parameters/noDefaultAnswer'
+        - $ref: '#/parameters/defaultAnswer'
+      responses:
+        200:
+          $ref: '#/responses/RunStatus'
+        500: 
+          $ref: '#/responses/Error'
+  /run:
+    post:
+      summary: Runs the specified command line.
+      parameters:
+        - in: query
+          name: instance
+          type: string
+          description: Name of an instance on Lycia Application Server.
+          required: true
+        - in: query
+          name: command
+          type: string
+          description: Command line string.
+          required: true
+        - $ref: '#/parameters/verbose'
+        - $ref: '#/parameters/args'
+        - $ref: '#/parameters/slot'
+        - $ref: '#/parameters/timeout'
+        - $ref: '#/parameters/noDefaultAnswer'
+        - $ref: '#/parameters/defaultAnswer'
+      responses:
+        200:
+          $ref: '#/responses/Status'
+        500: 
+          $ref: '#/responses/Error'
+  /action/{actionName}:
+    post:
+      summary: Sets form field values and executes the specified 4GL action.
+      description: Can be executed only in the Idle state.
+      parameters:
+        - $ref: '#/parameters/x-auth-token'
+        - $ref: '#/parameters/slot'
+        - $ref: '#/parameters/actionNamePath'
+        - $ref: '#/parameters/infield'
+        - $ref: '#/parameters/inrow'
+        - $ref: '#/parameters/input'
+        - $ref: '#/parameters/inputSingle'
+        - $ref: '#/parameters/timeout'
+        - $ref: '#/parameters/noDefaultAnswer'
+        - $ref: '#/parameters/defaultAnswer'
+      responses:
+        200:
+          $ref: '#/responses/Result'
+        202: 
+          $ref: '#/responses/Accepted'
+        400:
+          $ref: '#/responses/NoCommand'
+        500: 
+          $ref: '#/responses/Error'
+
+  /current/stack:
+    get:
+      summary: Returns the current call stack.
+      description: |
+        Returns the current call stack of 4GL functions and waits for more data to proceed.
+        This includes only functions executed with /call, not real 4GL call stack.
+      produces:
+        - text/plain
+      parameters:
+        - $ref: '#/parameters/x-auth-token'
+        - $ref: '#/parameters/slot'
+      responses:
+        200: 
+          $ref: '#/responses/ResponseText'
+        400:
+          $ref: '#/responses/NoCommand'
+        
+  /current/error:
+    get:
+      summary: Returns the last message displayed with the ERROR statement.
+      produces:
+        - text/plain
+      parameters:
+        - $ref: '#/parameters/x-auth-token'
+        - $ref: '#/parameters/slot'
+      responses:
+        200: 
+          $ref: '#/responses/ResponseText'
+        400:
+          $ref: '#/responses/NoCommand'
+  /current/message:
+    get:
+      summary: Returns the last message displayed using the MESSAGE statement.
+      produces:
+        - text/plain
+      parameters:
+        - $ref: '#/parameters/x-auth-token'
+        - $ref: '#/parameters/slot'
+      responses:
+        200: 
+          $ref: '#/responses/ResponseText'
+        400:
+          $ref: '#/responses/NoCommand'
+  /current/comment:
+    get:
+      summary: Returns the last message displayed using the Comment property.
+      produces:
+        - text/plain
+      parameters:
+        - $ref: '#/parameters/x-auth-token'
+        - $ref: '#/parameters/slot'
+      responses:
+        200: 
+          $ref: '#/responses/ResponseText'
+        400:
+          $ref: '#/responses/NoCommand'
+  /current/console:
+    get:
+      summary: Returns the list of messages displayed using DISPLAY statement in 4GL code.
+      produces:
+        - text/plain
+      parameters:
+        - $ref: '#/parameters/x-auth-token'
+        - $ref: '#/parameters/slot'
+        - in: query
+          name: limit
+          type: integer
+          minimum: 1
+          description: maximum number of lines to be displayed
+      responses:
+        200: 
+          $ref: '#/responses/ResponseText'
+        400:
+          $ref: '#/responses/NoCommand'
+    delete:
+      summary: |
+        Clears all messages from DISPLAY console.
+      parameters:
+        - $ref: '#/parameters/x-auth-token'
+        - $ref: '#/parameters/slot'
+      responses:
+        206: 
+          $ref: '#/responses/NoContent'
+        400:
+          $ref: '#/responses/NoCommand'
+  /current/actions:
+    get:
+      summary: |
+        Returns actions currently available for execution.
+      parameters:
+        - $ref: '#/parameters/x-auth-token'
+        - $ref: '#/parameters/slot'
+      responses:
+        200: 
+          $ref: '#/responses/ResponseText'
+        400:
+          $ref: '#/responses/NoCommand'
+  /current/fields:
+    get:
+      summary: Returns the list of active fields on form.
+      parameters:
+        - $ref: '#/parameters/x-auth-token'
+        - $ref: '#/parameters/slot'
+      responses:
+        200: 
+          $ref: '#/responses/ResponseText'
+        400:
+          $ref: '#/responses/NoCommand'
+  /current/field:
+    get:
+      summary: |
+        Returns the currently focused field.      
+      parameters:
+        - $ref: '#/parameters/x-auth-token'
+        - $ref: '#/parameters/slot'
+      responses:
+        200: 
+          $ref: '#/responses/ResponseText'
+        400:
+          $ref: '#/responses/NoCommand'
+  /current/row:
+    get:
+      summary: Returns the currently focused row.
+      parameters:
+        - $ref: '#/parameters/x-auth-token'
+        - $ref: '#/parameters/slot'
+      responses:
+        200: 
+          $ref: '#/responses/ResponseText'
+        400:
+          $ref: '#/responses/NoCommand'
+  /current/screen:
+    get:
+      summary: Returns static labels from form and labels used in DISPLAY AT.
+      parameters:
+        - $ref: '#/parameters/x-auth-token'
+        - $ref: '#/parameters/slot'
+      responses:
+        200: 
+          $ref: '#/responses/ResponseText'
+        400:
+          $ref: '#/responses/NoCommand'
+  /current/screen/{row}:
+    get:
+      summary: |
+        Returns static labels from form and labels used in DISPLAY AT from a specified row.
+      parameters:
+        - $ref: '#/parameters/x-auth-token'
+        - $ref: '#/parameters/slot'
+        - $ref: '#/parameters/row'
+      responses:
+        200: 
+          $ref: '#/responses/ResponseText'
+        400:
+          $ref: '#/responses/NoCommand'
+  /current/screen/{row}/{column}:
+    get:
+      summary: |
+        Returns Static labels from form and labels used in DISPLAY AT from a specified row column.      
+      parameters:
+        - $ref: '#/parameters/x-auth-token'
+        - $ref: '#/parameters/slot'
+        - $ref: '#/parameters/row'
+        - $ref: '#/parameters/column'
+      responses:
+        200: 
+          $ref: '#/responses/ResponseText'
+        400:
+          $ref: '#/responses/NoCommand'
+  /focus/{fieldName}:
+    post:
+      summary: Sets focus to a field.
+      description: Can be executed only in the Idle state
+      parameters:
+        - $ref: '#/parameters/x-auth-token'
+        - $ref: '#/parameters/slot'
+        - $ref: '#/parameters/fieldName'
+        - $ref: '#/parameters/timeout'
+        - $ref: '#/parameters/noDefaultAnswer'
+        - $ref: '#/parameters/defaultAnswer'
+      responses:
+        200:
+          $ref: '#/responses/Result'
+        202: 
+          $ref: '#/responses/Accepted'
+        500: 
+          $ref: '#/responses/Error'
+  /focus/{fieldName}/{row}:
+    post:
+      summary: Sets focus to a field in a row.
+      description: Can be executed only in the Idle state.
+      parameters:
+        - $ref: '#/parameters/x-auth-token'
+        - $ref: '#/parameters/slot'
+        - $ref: '#/parameters/fieldName'
+        - $ref: '#/parameters/row'
+        - $ref: '#/parameters/timeout'
+        - $ref: '#/parameters/noDefaultAnswer'
+        - $ref: '#/parameters/defaultAnswer'
+      responses:
+        200:
+          $ref: '#/responses/Result'
+        202: 
+          $ref: '#/responses/Accepted'
+        400:
+          $ref: '#/responses/NoCommand'
+        500: 
+          $ref: '#/responses/Error'
+  /set:
+    post:
+      summary: Sets form fields values.
+      description: |
+        The operation can be executed only in the Idle state. To set values of 
+        binary fields, send them as multipart form request with part name is 
+        a name of the field to set.
+      parameters:
+        - $ref: '#/parameters/x-auth-token'
+        - $ref: '#/parameters/slot'
+        - $ref: '#/parameters/input'
+        - $ref: '#/parameters/inputSingle'
+        - $ref: '#/parameters/timeout'
+        - $ref: '#/parameters/noDefaultAnswer'
+        - $ref: '#/parameters/defaultAnswer'
+      responses:
+        200:
+          $ref: '#/responses/Result'
+        202: 
+          $ref: '#/responses/Accepted'
+        400:
+          $ref: '#/responses/NoCommand'
+        500: 
+          $ref: '#/responses/Error'
+  /key/{keyName}:
+    post:
+      summary: Simulates a key press.
+      description: Can be executed only in the Idle state.
+      parameters:
+        - $ref: '#/parameters/x-auth-token'
+        - $ref: '#/parameters/slot'
+        - $ref: '#/parameters/keyNamePath'
+        - $ref: '#/parameters/timeout'
+        - $ref: '#/parameters/noDefaultAnswer'
+        - $ref: '#/parameters/defaultAnswer'
+      responses:
+        200:
+          $ref: '#/responses/Result'
+        202: 
+          $ref: '#/responses/Accepted'
+        400:
+          $ref: '#/responses/NoCommand'
+        500: 
+          $ref: '#/responses/Error'
+  /call/{functionName}:
+    post:
+      summary: Calls a function defined in the currently running program.
+      description: Can be executed only in the Idle state.
+      parameters:
+        - $ref: '#/parameters/x-auth-token'
+        - $ref: '#/parameters/slot'
+        - $ref: '#/parameters/functionName'
+        - $ref: '#/parameters/functionArgs'
+        - $ref: '#/parameters/timeout'
+        - $ref: '#/parameters/noDefaultAnswer'
+        - $ref: '#/parameters/defaultAnswer'
+        - $ref: '#/parameters/defaultAction'
+      responses:
+        200:
+          $ref: '#/responses/Result'
+        202: 
+          $ref: '#/responses/Accepted'
+        400:
+          $ref: '#/responses/NoCommand'
+        500: 
+          $ref: '#/responses/Error'
+
+  /answer:
+    post:
+      summary: |
+        Answers to a query from a program and continues execution.
+      description: Can be executed only in the Question state.
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/x-auth-token'
+        - in: query
+          type: string
+          name: value
+          required: true
+          description: The actual answer text to send.
+        - $ref: '#/parameters/slot'
+        - $ref: '#/parameters/verbose'
+        - $ref: '#/parameters/timeout'
+        - $ref: '#/parameters/noDefaultAnswer'
+        - $ref: '#/parameters/defaultAnswer'
+      responses:
+        200:
+          $ref: '#/responses/Result'
+        202:
+          $ref: '#/responses/Accepted'
+        400:
+          $ref: '#/responses/NoCommand'
+        500: 
+          $ref: '#/responses/Error'
+  /quit:
+    post:
+      summary: Requests quitting the application.
+      produces:
+        - text/plain
+      parameters:
+        - $ref: '#/parameters/x-auth-token'
+        - $ref: '#/parameters/slot'
+      responses:
+        200:
+          description: Application disconnected.
+        400:
+          $ref: '#/responses/NoCommand'
+          
+  /get:
+    get:
+      summary: |
+        Returns JSON object mapping field names to values.
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/x-auth-token'
+        - $ref: '#/parameters/slot'
+      responses:
+        200:
+          description: | 
+            JSON object maps field name to its value. The value is either
+            simple type or array if the field is in a screen array. The value 
+            can also be base64 encoded data if it is binary.
+        400:
+          $ref: '#/responses/NoCommand'
+        500: 
+          $ref: '#/responses/Error'
+  /get/{fieldName}:
+    get:
+      summary: |
+        Returns the current value of a form field.
+      parameters:
+        - $ref: '#/parameters/x-auth-token'
+        - $ref: '#/parameters/slot'
+        - $ref: '#/parameters/fieldName'
+      produces:
+        - application/json
+      responses:
+        200:
+          description: |
+            If it is an array field it will return JSON array. 
+            If the field is binary, it will be base64 encoded.
+        400:
+          $ref: '#/responses/NoCommand'
+        500: 
+          $ref: '#/responses/Error'
+        404: 
+          $ref: '#/responses/NotFound'
+  /get/{fieldName}/{row}:
+    get:
+      summary: |
+        Returns the value of a form field in a given row.
+      parameters:
+        - $ref: '#/parameters/x-auth-token'
+        - $ref: '#/parameters/fieldName'
+        - $ref: '#/parameters/row'
+        - $ref: '#/parameters/slot'
+      produces:
+        - application/json
+      responses:
+        200:
+          description: |
+            If the field is binary it will be base64 encoded, otherwise 
+            it will be a simple type.
+        206:
+          $ref: '#/responses/NoContent'
+        400:
+          $ref: '#/responses/NoCommand'
+        500: 
+          $ref: '#/responses/Error'
+        404: 
+          $ref: '#/responses/NotFound'
+  /blob/{fieldName}:
+    get:
+      summary: |
+        Returns the current value of a binary blob form field.
+      parameters:
+        - $ref: '#/parameters/x-auth-token'
+        - $ref: '#/parameters/slot'
+        - $ref: '#/parameters/fieldName'
+      produces:
+        - application/json
+      responses:
+        200:
+          description: |
+            If it is an array field it will return JSON array. 
+            If the field is binary it will be base64 encoded.
+        400:
+          $ref: '#/responses/NoCommand'
+        500: 
+          $ref: '#/responses/Error'
+        404: 
+          $ref: '#/responses/NotFound'
+  /blob/{fieldName}/{row}:
+    get:
+      summary: |
+        Returns the current value of a binary blob form field in a given row.
+      parameters:
+        - $ref: '#/parameters/x-auth-token'
+        - $ref: '#/parameters/slot'
+        - $ref: '#/parameters/row'
+        - $ref: '#/parameters/fieldName'
+      produces:
+        - application/json
+      responses:
+        200:
+          description: |
+            If it is an array field, it will return JSON array. 
+            If the field is binary, it will be base64 encoded.
+        400:
+          $ref: '#/responses/NoCommand'
+        500: 
+          $ref: '#/responses/Error'
+        404: 
+          $ref: '#/responses/NotFound'
+  /download:
+    post:
+      summary: |
+        Downloads data sent using the fgl_download function.
+      description: |
+         Can be executed only in the Transfer state.
+         After it will silently will continue executing until
+         Idle, Stop, Question or another Transfer state.
+      parameters:
+        - $ref: '#/parameters/x-auth-token'
+      responses:
+        200:
+          description: Content.
+        500: 
+          $ref: '#/responses/Error'
+        404: 
+          $ref: '#/responses/NotFound'
+  /upload:
+    post:
+      summary: |
+        Uploads data to fgl_upload function.
+      description: |
+        Can be executed only in the Transfer state.
+        After, it will silently will continue executing until
+        Idle, Stop, Question or another Transfer state.
+      parameters:
+        - $ref: '#/parameters/x-auth-token'
+        - in: query
+          name: errNo
+          type: integer
+          description:  |
+            Signals an error on client side that prevents sending data.
+      responses:
+        200:
+          description: Content.
+        500: 
+          $ref: '#/responses/Error'
+        404: 
+          $ref: '#/responses/NotFound'
+definitions:
+  RunStatus:
+      title: 4GL application status and session ID.
+      type: object
+      properties:
+        status: 
+          type: string
+          enum:
+            - Idle
+            - Question
+            - Busy
+            - Stopped
+            - Transfer
+        arg:
+          type: string
+        sessionid:
+          type: string
+  Status:
+      title: status description
+      type: object
+      properties:
+        status: 
+          type: string
+          enum:
+            - Idle
+            - Question
+            - Busy
+            - Stopped
+            - Transfer
+        arg:
+          type: string
+responses:
+  RunStatus:
+    description:  |
+      4GL application status and session ID.
+    schema:
+      $ref: '#/definitions/RunStatus'
+  Status:
+    description:  |
+      Current 4GL application status.
+    schema:
+      $ref: '#/definitions/Status'
+  Error:
+    description: Internal server error.
+    schema:
+      title: error description
+      type: object
+      properties:
+        error: 
+          type: string
+  ResponseText:
+    description: response text
+    schema:
+      type: string
+  NoContent:
+    description: Nothing to return.
+  NoCommand:
+    description: No such command is running.
+    schema:
+      title: error description
+      type: object
+      properties:
+        error: 
+          type: string
+  NotFound:
+    description: |
+      The resource is not found. The field name is incorrect, or the 
+      program is in a wrong state at the moment of invocation.
+  Accepted:
+    description: |
+      Execution control stopped in the Idle, Question or Transfer state.
+  Result:
+    description: |
+      Last function call result value.
+parameters:
+  column:
+    in: path
+    name: column
+    type: integer
+    minimum: 1
+    description: Row number in display array.
+    required: true
+  row:
+    in: path
+    name: row
+    type: integer
+    minimum: 1
+    description: Row number in display array.
+    required: true
+  verbose:
+    in: query
+    type: boolean
+    name: verbose
+    allowEmptyValue: true
+    description: Outputs signal and queries sent by 4GL application to HTTP response stream.
+  args:
+    in: query
+    type: string
+    name: args
+    description: Command line arguments.
+  slot:
+    in: query
+    type: string
+    name: slot
+    default: default
+    description: Identifies the command running in current session.
+  fieldName: 
+    in: path
+    type: string
+    name: fieldName
+    description: Name of the field.
+    required: true
+  actionName: 
+    in: query
+    type: string
+    name: actionName
+    description: Name of the 4GL action.
+  actionNamePath: 
+    in: path
+    type: string
+    name: actionName
+    description: Name of the 4GL action.
+    required: true
+  keyNamePath: 
+    in: path
+    type: string
+    name: keyName
+    description: Key name to simulate.
+    required: true
+  functionName:
+    in: path
+    type: string
+    name: functionName
+    description: Name of the 4GL action.
+    required: true
+  functionArgs: 
+    in: query
+    type: string
+    name: args
+    description: An argument to a function.
+  inrow:
+    in: query
+    type: string
+    name: inrow
+    description: |
+      Row to focus on before action.
+  infield:
+    in: query
+    type: string
+    name: infield
+    description: |
+      Field to focus on before action.
+  input:
+    in: query
+    type: string
+    name: input
+    description: |
+      Input value into field having focus.
+  inputSingle:
+    in: query
+    type: string
+    name: "_"
+    collectionFormat: multi
+    description: |
+      Input value into field having focus.
+  timeout: 
+    in: query
+    type: integer
+    name: timeout
+    description: | 
+      Timeout in milliseconds for the request to be completed.
+  defaultAction:
+    in: query
+    type: string
+    name: defaultAction
+    description: | 
+      An action to be executed during function call, on each idle state, until result
+      is received.
+  noDefaultAnswer:
+    in: query
+    type: boolean
+    name: noDefaultAnswer
+    description: |
+      If this parameter is defined, any operation that encounters a function waiting for response from front end 
+      will stop and wait for that response.
+    default: false
+  defaultAnswer:
+    in: query
+    type: string
+    name: defaultAnswer
+    description: |
+      If during operation execution, a client query function is executed, the value of this parameter
+      will be sent.
+    default: ""
+  x-auth-token:
+    in: header
+    name: x-auth-token
+    type: string
+    description: Session token
+    required: true
